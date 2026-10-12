@@ -1,0 +1,14 @@
+stages:
+  - test
+
+
+check-files:
+  stage: test
+  image: alpine:latest
+  script:
+    - echo "Запуск проверки файлов в ветке"
+    - ls -la
+    - test -f file2.txt
+    - echo "Проверка успешно завершена"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE="merge_reaquest_event"'
