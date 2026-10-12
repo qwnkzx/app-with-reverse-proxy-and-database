@@ -11,4 +11,4 @@ check-files:
     - test -f file2.txt
     - echo "Проверка успешно завершена"
   rules:
-    - if: '$CI_PIPELINE_SOURCE="merge_reaquest_event"'
+    - if: '$CI_PIPELINE_SOURCE="merge_request_event"'
