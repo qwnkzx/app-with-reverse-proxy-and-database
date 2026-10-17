@@ -1,0 +1,10 @@
+app/.data
+app/.secrets/
+.secrets/
+*.txt
+data/
+data/pg_data/
+__pycache__/
+*.pyc
+venv/
+.venv/
