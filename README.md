@@ -27,4 +27,4 @@
 
 Для этого понадобиться лишь одна команда
 
-`docker compose up -d'
+`docker compose up -d`
