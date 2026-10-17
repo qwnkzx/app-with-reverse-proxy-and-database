@@ -1,0 +1,79 @@
+services:
+  reverse-proxy:
+    image: nginx:latest
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./configs/nginx-proxy.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - project_net
+    depends_on:
+      - backend
+  
+
+
+  backend:
+    build: .
+    container_name: python-backend
+    working_dir: /app
+    environment:
+      - DB_HOST=database
+      - DB_PORT=5432
+      - POSTGRES_USER=bubu
+      - POSTGRES_DB=bubu
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-passwd
+    secrets:
+      - postgres-passwd
+    ports:
+      - "8000"
+    networks:
+      - project_net
+    depends_on:
+      database:
+        condition: service_healthy
+
+
+
+  frontend:
+    image: nginx:latest
+    container_name: nginx-front
+    volumes:
+      -  ./configs/nginx-frontend.conf:/etc/nginx/nginx.conf:ro
+      -  ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./404.html:/usr/share/nginx/html/404.html:ro
+    ports:
+      - "80"
+    networks:
+      - project_net
+  
+
+  database:
+    image: postgres:14.24-trixie
+    container_name: postgresql
+    restart: always
+    shm_size: "128mb"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bubu -d bubu"]
+    volumes:
+      - ./data/pg_data:/var/lib/postgresql/data/pgdata
+    environment:
+      - POSTGRES_DB=bubu
+      - POSTGRES_USER=bubu
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-passwd
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    secrets:
+      - postgres-passwd
+    ports:
+      - "5432:8000"
+    networks:
+      - project_net
+
+secrets:
+  postgres-passwd:
+    file: ./.secrets/postgres-passwd.txt
+
+
+networks:
+  project_net:
+    driver: bridge 

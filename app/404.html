@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d18">
+  <title>404 — Страница не найдена | TuxOps</title>
+
+  <style>
+    :root {
+      --bg: #090d18;
+      --panel: #111a2c;
+      --border: #293651;
+      --text: #f2f6ff;
+      --muted: #9aa9c2;
+      --cyan: #76e4df;
+      --purple: #aa9aff;
+      --orange: #ffc777;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(ellipse at 18% 12%, #5771ff2e, transparent 34rem),
+        radial-gradient(ellipse at 86% 85%, #76e4df1c, transparent 31rem),
+        var(--bg);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .22;
+      background-image:
+        linear-gradient(#8faadc14 1px, transparent 1px),
+        linear-gradient(90deg, #8faadc14 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, #000, transparent 95%);
+    }
+
+    .page {
+      width: min(980px, 100%);
+      position: relative;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 850;
+      letter-spacing: .14em;
+    }
+
+    .brand-icon {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid #76e4df59;
+      border-radius: 12px;
+      background: #76e4df14;
+      font-size: 22px;
+    }
+
+    .brand-name span { color: var(--cyan); }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #111a2cbf;
+      color: var(--muted);
+      font: 11px monospace;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 12px #ffc777a6;
+    }
+
+    .card {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      align-items: center;
+      gap: clamp(20px, 5vw, 56px);
+      padding: clamp(26px, 6vw, 64px);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: linear-gradient(145deg, #131d31f7, #0c1321f5);
+      box-shadow: 0 30px 100px #0005;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--cyan);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 24px;
+      height: 1px;
+      background: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+    }
+
+    h1 {
+      margin: 20px 0 12px;
+      font-size: clamp(64px, 12vw, 112px);
+      line-height: .86;
+      letter-spacing: -.08em;
+      background: linear-gradient(105deg, #fff 12%, var(--cyan) 65%, var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    h2 {
+      margin: 22px 0 10px;
+      font-size: clamp(21px, 3vw, 30px);
+      letter-spacing: -.04em;
+    }
+
+    .description {
+      max-width: 440px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      background: #ffffff09;
+      font-size: 12px;
+      font-weight: 750;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .18s, border-color .18s;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      border-color: #4c6888;
+    }
+
+    .button.primary {
+      color: #09141c;
+      border-color: transparent;
+      background: linear-gradient(110deg, var(--cyan), #a5f0dc);
+    }
+
+    .button:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 3px;
+    }
+
+    .visual {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 310px;
+    }
+
+    .orbit {
+      position: absolute;
+      width: min(320px, 100%);
+      aspect-ratio: 1;
+      border: 1px solid #89a1d933;
+      border-radius: 50%;
+    }
+
+    .orbit::before,
+    .orbit::after {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      border: 1px dashed #76e4df38;
+      border-radius: 50%;
+    }
+
+    .orbit::after {
+      inset: 55px;
+      border-style: solid;
+      border-color: #aa9aff33;
+    }
+
+    .tux {
+      position: relative;
+      z-index: 1;
+      width: min(235px, 75%);
+      filter: drop-shadow(0 24px 28px #0006);
+      animation: float 4.8s ease-in-out infinite;
+    }
+
+    .float-tag {
+      position: absolute;
+      z-index: 2;
+      padding: 7px 9px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #090e19e0;
+      color: var(--muted);
+      font: 11px monospace;
+      box-shadow: 0 10px 28px #0003;
+    }
+
+    .tag-top { top: 10%; left: -2%; }
+    .tag-right { top: 23%; right: -5%; color: var(--orange); }
+    .tag-bottom { bottom: 9%; left: 6%; color: var(--cyan); }
+
+    .terminal {
+      margin-top: 20px;
+      padding: 15px 17px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #050a13a6;
+      font: 12px/1.9 monospace;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+
+    .terminal-head {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .terminal-head i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #40516c;
+    }
+
+    .prompt { color: var(--cyan); }
+    .error { color: #ffb4a9; }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 17px 4px 0;
+      color: #71809a;
+      font-size: 10px;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50% { transform: translateY(-9px) rotate(1deg); }
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 15px; }
+
+      .card {
+        grid-template-columns: 1fr;
+        padding: 28px 23px;
+        gap: 12px;
+      }
+
+      .visual {
+        grid-row: 1;
+        min-height: 245px;
+      }
+
+      .tux { width: 175px; }
+      .orbit { width: 235px; }
+      .tag-top { left: 0; }
+      .tag-right { right: 0; }
+      .tag-bottom { bottom: 3%; }
+      .content { grid-row: 2; }
+      footer { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="TuxOps — на главную">
+        <span class="brand-icon">🐧</span>
+        <span class="brand-name">TUX<span>OPS</span></span>
+      </a>
+
+      <div class="status">
+        <span class="status-dot"></span>
+        ROUTE NOT FOUND
+      </div>
+    </header>
+
+    <section class="card" aria-labelledby="page-title">
+      <div class="content">
+        <div class="eyebrow">Something went off-route</div>
+        <h1>404</h1>
+        <h2 id="page-title">Страница потерялась.</h2>
+
+        <p class="description">
+          Такой страницы здесь нет. Возможно, ссылка устарела, адрес
+          введён с ошибкой или страница ушла в другой namespace.
+          Даже у пингвинов иногда пропадает маршрут.
+        </p>
+
+        <div class="actions">
+          <a class="button primary" href="/">⌂ На главную</a>
+          <button class="button" id="backButton" type="button">
+            ← Вернуться назад
+          </button>
+        </div>
+
+        <div class="terminal" aria-label="Информация об ошибке">
+          <div class="terminal-head"><i></i><i></i><i></i></div>
+          <div>
+            <span class="prompt">$</span>
+            curl -I <span id="requestedPath">/unknown-route</span>
+          </div>
+          <div class="error">HTTP/1.1 404 Not Found</div>
+          <div>hint: check URL or return to base route</div>
+        </div>
+      </div>
+
+      <div class="visual" aria-label="Пингвин Tux">
+        <div class="orbit"></div>
+        <span class="float-tag tag-top">route: missing</span>
+        <span class="float-tag tag-right">errno 404</span>
+        <span class="float-tag tag-bottom">ping destination?</span>
+
+        <svg class="tux" viewBox="0 0 260 310" role="img"
+             aria-labelledby="tuxTitle">
+          <title id="tuxTitle">Tux ищет потерянный маршрут</title>
+
+          <defs>
+            <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#465773"/>
+              <stop offset=".48" stop-color="#172238"/>
+              <stop offset="1" stop-color="#080d17"/>
+            </linearGradient>
+
+            <linearGradient id="belly" x1="0" y1="0" x2=".8" y2="1">
+              <stop stop-color="#fff"/>
+              <stop offset="1" stop-color="#d7e3f2"/>
+            </linearGradient>
+
+            <linearGradient id="beak" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#ffe6a0"/>
+              <stop offset="1" stop-color="#ff9d41"/>
+            </linearGradient>
+          </defs>
+
+          <ellipse cx="130" cy="287" rx="69" ry="10" fill="#000" opacity=".22"/>
+
+          <path d="M70 130C34 151 31 202 55 224c12 11 24 6 31-10l14-52Z"
+                fill="#172238" stroke="#536582" stroke-width="3"/>
+
+          <path d="M190 130c36 21 39 72 15 94-12 11-24 6-31-10l-14-52Z"
+                fill="#172238" stroke="#536582" stroke-width="3"/>
+
+          <path d="M88 264c-18 0-31 10-38 22-4 7 2 13 11 13h55c9 0 12-7 6-14-8-12-20-20-34-21Z"
+                fill="#ffbd5e"/>
+
+          <path d="M172 264c18 0 31 10 38 22 4 7-2 13-11 13h-55c-9 0-12-7-6-14 8-12 20-20 34-21Z"
+                fill="#ffbd5e"/>
+
+          <path d="M130 20C78 20 51 64 51 130c0 76 22 137 79 137s79-61 79-137C209 64 182 20 130 20Z"
+                fill="url(#body)" stroke="#52617d" stroke-width="3"/>
+
+          <path d="M130 99c-35 0-54 36-54 79 0 44 17 72 54 72s54-28 54-72c0-43-19-79-54-79Z"
+                fill="url(#belly)"/>
+
+          <ellipse cx="105" cy="72" rx="22" ry="26" fill="#fff"/>
+          <ellipse cx="155" cy="72" rx="22" ry="26" fill="#fff"/>
+          <ellipse cx="111" cy="77" rx="8" ry="11" fill="#0b1220"/>
+          <ellipse cx="149" cy="77" rx="8" ry="11" fill="#0b1220"/>
+          <circle cx="113" cy="73" r="3" fill="#fff"/>
+          <circle cx="151" cy="73" r="3" fill="#fff"/>
+
+          <path d="M109 100c7-10 35-10 42 0l-21 19Z"
+                fill="url(#beak)" stroke="#e58e36" stroke-width="2"/>
+
+          <path d="M82 145c-5 13-7 24-5 37"
+                stroke="#fff" stroke-width="4"
+                stroke-linecap="round" opacity=".65"/>
+
+          <path d="M83 164c16 10 32 13 47 13s31-3 47-13"
+                fill="none" stroke="#76e4df"
+                stroke-width="5" stroke-linecap="round"/>
+
+          <path d="M177 166l12 3-8 9"
+                fill="none" stroke="#aa9aff"
+                stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </section>
+
+    <footer>
+      <span>TUXOPS · KEEP CALM AND CHECK THE ROUTE</span>
+      <span>ERROR_CODE: 404</span>
+    </footer>
+  </main>
+
+  <script>
+    // Показываем путь, на котором открылась 404-страница.
+    document.getElementById("requestedPath").textContent =
+      window.location.pathname || "/";
+
+    // Возврат назад; если истории нет, открываем главную.
+    document.getElementById("backButton").addEventListener("click", () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "/";
+      }
+    });
+  </script>
+</body>
+</html>

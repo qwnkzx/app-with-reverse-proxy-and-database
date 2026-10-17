@@ -1,0 +1,1488 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1020">
+  <title>TuxOps — DevOps Lab</title>
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --sidebar: #0d1426;
+      --panel: #121b30;
+      --panel-light: #17233b;
+      --border: #25324b;
+      --text: #eff4ff;
+      --muted: #8e9db8;
+      --accent: #79e2dc;
+      --purple: #a99aff;
+      --green: #9be6a5;
+      --orange: #ffc982;
+      --red: #ff9696;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 80% 0%, #202450 0%, transparent 35%),
+        var(--bg);
+      font-family: Inter, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      padding: 28px 18px;
+      background: rgba(13, 20, 38, .92);
+      border-right: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 8px 32px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #72e5dc, #9a8bff);
+      color: #101629;
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .07em;
+    }
+
+    .brand-name span {
+      color: var(--accent);
+    }
+
+    .brand-sub {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .12em;
+    }
+
+    .nav-label {
+      padding: 0 10px;
+      margin: 12px 0;
+      color: #687894;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      transition: .2s;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      color: var(--text);
+      background: #17243a;
+      border-color: var(--border);
+    }
+
+    .nav a.active {
+      box-shadow: inset 3px 0 var(--accent);
+    }
+
+    .nav-icon {
+      width: 22px;
+      text-align: center;
+      font-size: 17px;
+    }
+
+    .side-card {
+      margin-top: 40px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: linear-gradient(145deg, #17243a, #121a2e);
+    }
+
+    .side-card .penguin {
+      font-size: 30px;
+    }
+
+    .side-card h3 {
+      margin: 10px 0 5px;
+      font-size: 14px;
+    }
+
+    .side-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    /* MAIN */
+
+    main {
+      width: 100%;
+      max-width: 1500px;
+      min-width: 0;
+      padding: 30px clamp(18px, 4vw, 54px);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .breadcrumb {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .breadcrumb span {
+      color: var(--accent);
+    }
+
+    .mode {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      background: #11192b;
+      font-size: 11px;
+    }
+
+    .mode-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 13px 0 10px;
+      font-size: clamp(29px, 4vw, 43px);
+      letter-spacing: -.045em;
+      line-height: 1.15;
+    }
+
+    .hero p {
+      max-width: 580px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .hero-mark {
+      display: grid;
+      place-items: center;
+      min-width: 110px;
+      width: 110px;
+      height: 110px;
+      border: 1px solid #344263;
+      border-radius: 30px;
+      background: linear-gradient(145deg, #1e2e49, #13182e);
+      font-size: 54px;
+      box-shadow: 0 15px 55px #0003;
+    }
+
+    /* STATISTICS */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .stat {
+      position: relative;
+      overflow: hidden;
+      padding: 20px;
+      background: rgba(18, 27, 48, .88);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+    }
+
+    .stat::after {
+      content: "";
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      top: -44px;
+      right: -30px;
+      background: var(--glow, #79e2dc);
+      filter: blur(45px);
+      opacity: .16;
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat-icon {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: #24334c;
+      font-size: 16px;
+    }
+
+    .stat-number {
+      margin-top: 19px;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+    }
+
+    .stat-caption {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* CONTENT GRID */
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(250px, .8fr);
+      align-items: start;
+      gap: 20px;
+    }
+
+    .panel {
+      min-width: 0;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(18, 27, 48, .88);
+    }
+
+    .panel-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: -.02em;
+    }
+
+    .panel-description {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .count {
+      padding: 5px 9px;
+      border-radius: 8px;
+      background: #202e48;
+      color: var(--accent);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    /* FORM */
+
+    .add-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 130px;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .field {
+      width: 100%;
+      min-width: 0;
+      padding: 12px;
+      color: var(--text);
+      background: #0d1527;
+      border: 1px solid #2b3851;
+      border-radius: 10px;
+      outline: none;
+      font-size: 12px;
+    }
+
+    .field:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px #79e2dc16;
+    }
+
+    .field::placeholder {
+      color: #6e7e99;
+    }
+
+    .form-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 10px;
+    }
+
+    .primary-button {
+      padding: 11px 15px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #0b1720;
+      font-size: 12px;
+      font-weight: 800;
+      transition: .2s;
+    }
+
+    .primary-button:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    /* FILTERS */
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 24px 0 15px;
+    }
+
+    .filter {
+      padding: 8px 11px;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 11px;
+    }
+
+    .filter:hover,
+    .filter.active {
+      color: var(--text);
+      background: #20304a;
+      border-color: #3a5274;
+    }
+
+    .search {
+      margin-bottom: 15px;
+    }
+
+    /* TASK LIST */
+
+    .task-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .task {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid #26334c;
+      border-radius: 12px;
+      background: #10192b;
+      transition: .2s;
+    }
+
+    .task:hover {
+      border-color: #405171;
+      background: #152139;
+    }
+
+    .task-checkbox {
+      appearance: none;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      width: 19px;
+      height: 19px;
+      margin: 1px 0 0;
+      border: 1px solid #50617d;
+      border-radius: 6px;
+      background: #0b1220;
+      cursor: pointer;
+    }
+
+    .task-checkbox:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .task-checkbox:checked::after {
+      content: "✓";
+      color: #0b1720;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .task-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .task-title {
+      overflow-wrap: anywhere;
+      font-size: 12px;
+      line-height: 1.6;
+      font-weight: 650;
+    }
+
+    .task.done .task-title {
+      color: #7686a0;
+      text-decoration: line-through;
+    }
+
+    .task-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .tag {
+      padding: 4px 7px;
+      border: 1px solid #2e3d56;
+      border-radius: 6px;
+      color: #b0bfd7;
+      font-size: 10px;
+    }
+
+    .tag.linux { color: var(--orange); }
+    .tag.networking { color: var(--accent); }
+    .tag.docker { color: #91baff; }
+    .tag.nginx { color: var(--green); }
+    .tag.git { color: var(--purple); }
+
+    .delete-button {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      width: 30px;
+      height: 30px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: #73839e;
+      font-size: 16px;
+    }
+
+    .delete-button:hover {
+      color: var(--red);
+      background: #ff707012;
+      border-color: #ff70702b;
+    }
+
+    .empty {
+      padding: 28px 10px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    /* RIGHT COLUMN */
+
+    .focus-card {
+      padding: 19px;
+      border: 1px solid #3e4770;
+      border-radius: 14px;
+      background:
+        radial-gradient(ellipse at 100% 0%, #7760c529, transparent 58%),
+        #161d36;
+    }
+
+    .focus-icon {
+      display: grid;
+      place-items: center;
+      width: 43px;
+      height: 43px;
+      border: 1px solid #514c82;
+      border-radius: 12px;
+      background: #292849;
+      font-size: 20px;
+    }
+
+    .focus-card h3 {
+      margin: 15px 0 7px;
+      font-size: 15px;
+    }
+
+    .focus-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .focus-label {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 6px 8px;
+      border: 1px solid #514c82;
+      border-radius: 8px;
+      color: #c4b9ff;
+      font-size: 10px;
+    }
+
+    .stack-list {
+      display: grid;
+      gap: 13px;
+      margin-top: 17px;
+    }
+
+    .stack-item {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .stack-icon {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #172239;
+      font-size: 16px;
+    }
+
+    .stack-name {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .stack-desc {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .progress-track {
+      height: 5px;
+      margin-top: 10px;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #29354c;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--purple));
+      transition: width .3s;
+    }
+
+    .note {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: #0e1728;
+    }
+
+    .note-title {
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .note p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 25px 0 5px;
+      color: #71809a;
+      font-size: 10px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 1050px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .right-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+        gap: 14px;
+      }
+
+      .note {
+        grid-column: 1 / -1;
+        margin-top: 0;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        padding: 13px 15px;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .brand {
+        padding: 0 3px 12px;
+      }
+
+      .brand-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 21px;
+      }
+
+      .nav-label,
+      .side-card {
+        display: none;
+      }
+
+      .nav {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 5px;
+      }
+
+      .nav a {
+        justify-content: center;
+        padding: 10px 5px;
+        font-size: 10px;
+        gap: 4px;
+        flex-direction: column;
+      }
+
+      main {
+        padding: 22px 15px;
+      }
+
+      .topbar {
+        margin-bottom: 25px;
+      }
+
+      .hero-mark {
+        display: none;
+      }
+
+      .stats {
+        gap: 8px;
+      }
+
+      .stat {
+        padding: 13px;
+      }
+
+      .stat-top {
+        font-size: 10px;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .stat-icon {
+        width: 27px;
+        height: 27px;
+        font-size: 13px;
+      }
+
+      .stat-number {
+        margin-top: 14px;
+        font-size: 26px;
+      }
+
+      .stat-caption {
+        font-size: 9px;
+        line-height: 1.6;
+      }
+
+      .panel {
+        padding: 16px;
+      }
+
+      .right-column {
+        grid-template-columns: 1fr;
+      }
+
+      .note {
+        grid-column: auto;
+      }
+
+      .form-bottom {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .form-bottom .primary-button {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+
+    <aside class="sidebar">
+      <a class="brand" href="#overview" style="text-decoration:none;color:inherit">
+        <div class="brand-icon">🐧</div>
+        <div>
+          <div class="brand-name">TUX<span>OPS</span></div>
+          <div class="brand-sub">DEVOPS LAB</div>
+        </div>
+      </a>
+
+      <div class="nav-label">Workspace</div>
+
+      <nav class="nav">
+        <a class="active" href="#overview">
+          <span class="nav-icon">▦</span>
+          Обзор
+        </a>
+        <a href="#labs">
+          <span class="nav-icon">⌘</span>
+          Лабораторки
+        </a>
+        <a href="#focus">
+          <span class="nav-icon">◈</span>
+          Мой фокус
+        </a>
+        <a href="#stack">
+          <span class="nav-icon">▤</span>
+          Технологии
+        </a>
+      </nav>
+
+      <div class="side-card">
+        <div class="penguin">🐧</div>
+        <h3>Одна задача за раз</h3>
+        <p>
+          Теория → практика → наблюдение → причина → исправление.
+          Строй фундамент постепенно.
+        </p>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar" id="overview">
+        <div class="breadcrumb">WORKSPACE / <span>OVERVIEW</span></div>
+
+        <div class="mode">
+          <span class="mode-dot"></span>
+          <span id="modeLabel">Локальный режим</span>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <div class="eyebrow">ТВОЯ ЛАБОРАТОРИЯ</div>
+          <h1>Меньше теории.<br><span style="color:var(--accent)">Больше практики.</span></h1>
+          <p>
+            Трекер технических экспериментов: записывай лабораторки,
+            отмечай результаты и постепенно превращай знания в реальные навыки.
+          </p>
+        </div>
+
+        <div class="hero-mark">🐧</div>
+      </section>
+
+      <section class="stats" aria-label="Статистика">
+        <article class="stat" style="--glow:#79e2dc">
+          <div class="stat-top">
+            Всего задач
+            <span class="stat-icon">▦</span>
+          </div>
+          <div class="stat-number" id="totalCount">0</div>
+          <div class="stat-caption">В твоём лабораторном плане</div>
+        </article>
+
+        <article class="stat" style="--glow:#9be6a5">
+          <div class="stat-top">
+            Выполнено
+            <span class="stat-icon">✓</span>
+          </div>
+          <div class="stat-number" id="doneCount">0</div>
+          <div class="stat-caption">Закрытые эксперименты</div>
+        </article>
+
+        <article class="stat" style="--glow:#a99aff">
+          <div class="stat-top">
+            В процессе
+            <span class="stat-icon">◷</span>
+          </div>
+          <div class="stat-number" id="activeCount">0</div>
+          <div class="stat-caption">Что предстоит исследовать</div>
+        </article>
+      </section>
+
+      <div class="content-grid">
+
+        <section class="panel" id="labs">
+          <div class="panel-heading">
+            <div>
+              <h2>Мои лабораторки</h2>
+              <p class="panel-description">
+                Добавляй эксперименты и фиксируй прогресс.
+              </p>
+            </div>
+            <div class="count" id="visibleCount">0 задач</div>
+          </div>
+
+          <form id="labForm">
+            <input
+              class="field"
+              id="titleInput"
+              type="text"
+              maxlength="120"
+              placeholder="Например: настроить Nginx reverse proxy"
+              required
+              autocomplete="off"
+            >
+
+            <div class="form-bottom" style="margin-top:10px">
+              <select class="field" id="categoryInput" aria-label="Категория">
+                <option value="Linux">Linux</option>
+                <option value="Networking">Networking</option>
+                <option value="Docker">Docker</option>
+                <option value="Nginx">Nginx</option>
+                <option value="Git">Git</option>
+                <option value="CI/CD">CI/CD</option>
+              </select>
+
+              <select class="field" id="priorityInput" aria-label="Приоритет">
+                <option value="Низкий">Низкий приоритет</option>
+                <option value="Средний" selected>Средний приоритет</option>
+                <option value="Высокий">Высокий приоритет</option>
+              </select>
+
+              <button class="primary-button" type="submit">
+                + Добавить
+              </button>
+            </div>
+          </form>
+
+          <div class="filters" role="group" aria-label="Фильтр задач">
+            <button class="filter active" data-filter="all" type="button">Все</button>
+            <button class="filter" data-filter="active" type="button">В процессе</button>
+            <button class="filter" data-filter="done" type="button">Выполнено</button>
+          </div>
+
+          <input
+            class="field search"
+            id="searchInput"
+            type="search"
+            placeholder="⌕  Найти лабораторку..."
+            aria-label="Поиск лабораторок"
+          >
+
+          <div class="task-list" id="taskList" aria-live="polite"></div>
+        </section>
+
+        <div class="right-column">
+
+          <section class="panel" id="focus">
+            <div class="panel-heading">
+              <div>
+                <h2>Текущий фокус</h2>
+                <p class="panel-description">Одна область за раз.</p>
+              </div>
+            </div>
+
+            <div class="focus-card">
+              <div class="focus-icon">🌐</div>
+              <h3>Linux Networking</h3>
+              <p>
+                IP-адреса, маски подсетей, шлюзы, маршрутизация,
+                DNS и диагностика сетевых проблем.
+              </p>
+              <span class="focus-label">LEARNING IN PROGRESS</span>
+            </div>
+
+            <div class="note">
+              <div class="note-title">💡 Инженерное правило</div>
+              <p>
+                Сначала воспроизведи проблему. Затем собери данные,
+                проверь гипотезу, исправь причину и подтверди результат.
+              </p>
+            </div>
+          </section>
+
+          <section class="panel" id="stack">
+            <div class="panel-heading">
+              <div>
+                <h2>Технологии</h2>
+                <p class="panel-description">Твой учебный стек.</p>
+              </div>
+            </div>
+
+            <div class="stack-list">
+              <div class="stack-item">
+                <div class="stack-icon">🐧</div>
+                <div>
+                  <div class="stack-name">Linux</div>
+                  <div class="stack-desc">Процессы, systemd, права, диски</div>
+                </div>
+              </div>
+
+              <div class="stack-item">
+                <div class="stack-icon">🐳</div>
+                <div>
+                  <div class="stack-name">Docker</div>
+                  <div class="stack-desc">Контейнеры и сети</div>
+                </div>
+              </div>
+
+              <div class="stack-item">
+                <div class="stack-icon">🌐</div>
+                <div>
+                  <div class="stack-name">Networking</div>
+                  <div class="stack-desc">IP, DNS, маршрутизация</div>
+                </div>
+              </div>
+
+              <div class="stack-item">
+                <div class="stack-icon">⚙️</div>
+                <div>
+                  <div class="stack-name">Nginx</div>
+                  <div class="stack-desc">Reverse proxy и upstream</div>
+                </div>
+              </div>
+
+              <div class="stack-item">
+                <div class="stack-icon">⑂</div>
+                <div>
+                  <div class="stack-name">Git</div>
+                  <div class="stack-desc">Ветки, merge, rebase</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="note">
+              <div class="note-title">Прогресс лабораторок</div>
+              <p id="progressText">Пока нет задач.</p>
+              <div
+                class="progress-track"
+                role="progressbar"
+                aria-label="Процент выполненных задач"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+                id="progressTrack"
+              >
+                <div class="progress-bar" id="progressBar"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <footer>
+        <span>TUXOPS LAB · LEARN BY BREAKING & FIXING</span>
+        <span id="currentDate"></span>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    /*
+      BACKEND INTEGRATION
+
+      Пока используется localStorage.
+      Когда появится backend, поменяй USE_API на true.
+
+      Ожидаемые endpoints:
+      GET    /api/labs
+      POST   /api/labs
+      PATCH  /api/labs/:id
+      DELETE /api/labs/:id
+
+      Формат лабораторки:
+      {
+        "id": "unique-id",
+        "title": "Настроить Nginx",
+        "category": "Nginx",
+        "priority": "Высокий",
+        "done": false,
+        "createdAt": "2026-10-13T12:00:00.000Z"
+      }
+    */
+
+    const USE_API = true;
+    const API_BASE = "/api/labs";
+    const STORAGE_KEY = "tuxops-labs-v1";
+
+    const initialLabs = [
+      {
+        id: "demo-1",
+        title: "Собрать backup.service и backup.slice",
+        category: "Linux",
+        priority: "Высокий",
+        done: true,
+        createdAt: "2026-10-08T10:00:00.000Z"
+      },
+      {
+        id: "demo-2",
+        title: "Исследовать Docker bridge network и gateway",
+        category: "Networking",
+        priority: "Высокий",
+        done: false,
+        createdAt: "2026-10-10T10:00:00.000Z"
+      },
+      {
+        id: "demo-3",
+        title: "Настроить Nginx reverse proxy для двух приложений",
+        category: "Nginx",
+        priority: "Средний",
+        done: false,
+        createdAt: "2026-10-11T10:00:00.000Z"
+      },
+      {
+        id: "demo-4",
+        title: "Повторить merge, rebase и cherry-pick",
+        category: "Git",
+        priority: "Низкий",
+        done: false,
+        createdAt: "2026-10-12T10:00:00.000Z"
+      }
+    ];
+
+    let labs = [];
+    let currentFilter = "all";
+    let searchQuery = "";
+
+    const $ = (selector) => document.querySelector(selector);
+
+    const taskList = $("#taskList");
+    const labForm = $("#labForm");
+    const titleInput = $("#titleInput");
+    const categoryInput = $("#categoryInput");
+    const priorityInput = $("#priorityInput");
+
+    function makeId() {
+      if (crypto.randomUUID) return crypto.randomUUID();
+      return Date.now().toString(36) + Math.random().toString(36).slice(2);
+    }
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char]);
+    }
+
+    function saveLocal() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(labs));
+    }
+
+    async function apiRequest(path = "", options = {}) {
+      const response = await fetch(API_BASE + path, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          ...options.headers
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("API вернул HTTP " + response.status);
+      }
+
+      if (response.status === 204) return null;
+      return response.json();
+    }
+
+    async function loadLabs() {
+      if (USE_API) {
+        labs = await apiRequest();
+        if (!Array.isArray(labs)) {
+          throw new Error("Ожидался массив лабораторок от API");
+        }
+      } else {
+        const saved = localStorage.getItem(STORAGE_KEY);
+
+        if (saved) {
+          labs = JSON.parse(saved);
+        } else {
+          labs = [...initialLabs];
+          saveLocal();
+        }
+      }
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      if (Number.isNaN(date.getTime())) return "";
+
+      return date.toLocaleDateString("ru-RU", {
+        day: "2-digit",
+        month: "short"
+      });
+    }
+
+    function categoryClass(category) {
+      return ({
+        Linux: "linux",
+        Networking: "networking",
+        Docker: "docker",
+        Nginx: "nginx",
+        Git: "git"
+      })[category] || "";
+    }
+
+    function getVisibleLabs() {
+      return labs.filter(lab => {
+        const matchesFilter =
+          currentFilter === "all" ||
+          (currentFilter === "active" && !lab.done) ||
+          (currentFilter === "done" && lab.done);
+
+        const query = searchQuery.toLowerCase();
+
+        const matchesSearch =
+          lab.title.toLowerCase().includes(query) ||
+          lab.category.toLowerCase().includes(query);
+
+        return matchesFilter && matchesSearch;
+      });
+    }
+
+    function renderLabs() {
+      const visible = getVisibleLabs();
+
+      $("#visibleCount").textContent = visible.length + " задач";
+
+      if (visible.length === 0) {
+        taskList.innerHTML = `
+          <div class="empty">
+            <div style="font-size:26px;margin-bottom:10px">🔎</div>
+            Ничего не найдено.<br>
+            Попробуй изменить фильтр или добавить лабораторку.
+          </div>
+        `;
+        return;
+      }
+
+      taskList.innerHTML = visible.map(lab => `
+        <article class="task ${lab.done ? "done" : ""}">
+          <input
+            class="task-checkbox"
+            type="checkbox"
+            data-action="toggle"
+            data-id="${escapeHTML(lab.id)}"
+            aria-label="Отметить задачу выполненной"
+            ${lab.done ? "checked" : ""}
+          >
+
+          <div class="task-content">
+            <div class="task-title">${escapeHTML(lab.title)}</div>
+
+            <div class="task-meta">
+              <span class="tag ${categoryClass(lab.category)}">
+                ${escapeHTML(lab.category)}
+              </span>
+              <span class="tag">
+                Приоритет: ${escapeHTML(lab.priority)}
+              </span>
+              <span class="tag">${formatDate(lab.createdAt)}</span>
+            </div>
+          </div>
+
+          <button
+            class="delete-button"
+            type="button"
+            data-action="delete"
+            data-id="${escapeHTML(lab.id)}"
+            aria-label="Удалить лабораторку"
+            title="Удалить"
+          >×</button>
+        </article>
+      `).join("");
+    }
+
+    function renderStats() {
+      const total = labs.length;
+      const done = labs.filter(lab => lab.done).length;
+      const active = total - done;
+      const percentage = total ? Math.round(done / total * 100) : 0;
+
+      $("#totalCount").textContent = total;
+      $("#doneCount").textContent = done;
+      $("#activeCount").textContent = active;
+
+      $("#progressText").textContent =
+        total ? `${percentage}% выполнено · ${done} из ${total}` :
+        "Добавь первую лабораторку, чтобы начать.";
+
+      $("#progressBar").style.width = percentage + "%";
+      $("#progressTrack").setAttribute("aria-valuenow", percentage);
+    }
+
+    function render() {
+      renderStats();
+      renderLabs();
+    }
+
+    async function createLab(labData) {
+      if (USE_API) {
+        const created = await apiRequest("", {
+          method: "POST",
+          body: JSON.stringify(labData)
+        });
+
+        labs.unshift(created || labData);
+      } else {
+        labs.unshift(labData);
+        saveLocal();
+      }
+
+      render();
+    }
+
+    async function toggleLab(id) {
+      const lab = labs.find(item => String(item.id) === id);
+      if (!lab) return;
+
+      const nextDone = !lab.done;
+
+      if (USE_API) {
+        const updated = await apiRequest(
+          "/" + encodeURIComponent(id),
+          {
+            method: "PATCH",
+            body: JSON.stringify({ done: nextDone })
+          }
+        );
+
+        labs = labs.map(item =>
+          String(item.id) === id
+            ? { ...item, done: nextDone, ...(updated || {}) }
+            : item
+        );
+      } else {
+        lab.done = nextDone;
+        saveLocal();
+      }
+
+      render();
+    }
+
+    async function deleteLab(id) {
+      if (USE_API) {
+        await apiRequest("/" + encodeURIComponent(id), {
+          method: "DELETE"
+        });
+      }
+
+      labs = labs.filter(item => String(item.id) !== id);
+
+      if (!USE_API) saveLocal();
+
+      render();
+    }
+
+    function notifyError(error) {
+      console.error(error);
+      alert("Не удалось выполнить действие: " + error.message);
+    }
+
+    labForm.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const title = titleInput.value.trim();
+      if (!title) {
+        titleInput.focus();
+        return;
+      }
+
+      const lab = {
+        id: makeId(),
+        title,
+        category: categoryInput.value,
+        priority: priorityInput.value,
+        done: false,
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        await createLab(lab);
+        titleInput.value = "";
+        titleInput.focus();
+      } catch (error) {
+        notifyError(error);
+      }
+    });
+
+    taskList.addEventListener("change", async event => {
+      const control = event.target.closest('[data-action="toggle"]');
+      if (!control) return;
+
+      const id = control.dataset.id;
+
+      try {
+        await toggleLab(id);
+      } catch (error) {
+        notifyError(error);
+        await boot();
+      }
+    });
+
+    taskList.addEventListener("click", async event => {
+      const button = event.target.closest('[data-action="delete"]');
+      if (!button) return;
+
+      const id = button.dataset.id;
+
+      if (!confirm("Удалить эту лабораторку?")) return;
+
+      try {
+        await deleteLab(id);
+      } catch (error) {
+        notifyError(error);
+      }
+    });
+
+    document.querySelectorAll("[data-filter]").forEach(button => {
+      button.addEventListener("click", () => {
+        currentFilter = button.dataset.filter;
+
+        document.querySelectorAll("[data-filter]").forEach(item => {
+          item.classList.toggle("active", item === button);
+        });
+
+        renderLabs();
+      });
+    });
+
+    $("#searchInput").addEventListener("input", event => {
+      searchQuery = event.target.value.trim();
+      renderLabs();
+    });
+
+    document.querySelectorAll(".nav a").forEach(link => {
+      link.addEventListener("click", () => {
+        document.querySelectorAll(".nav a").forEach(item => {
+          item.classList.toggle("active", item === link);
+        });
+      });
+    });
+
+    async function boot() {
+      try {
+        await loadLabs();
+
+        $("#modeLabel").textContent = USE_API
+          ? "API режим"
+          : "Локальный режим";
+
+        render();
+      } catch (error) {
+        notifyError(error);
+      }
+    }
+
+    $("#currentDate").textContent =
+      new Date().toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+
+    boot();
+  </script>
+</body>
+</html>

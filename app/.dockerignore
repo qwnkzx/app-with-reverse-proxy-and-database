@@ -1,0 +1,5 @@
+.gitlab-ci.yml
+/.vscode
+/.venv
+/.secrets
+/.vscode
