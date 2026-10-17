@@ -1,14 +1,69 @@
 stages:
-  - test
+  - lint
+  - unit-tests
+  - build 
+  - deploy
 
 
-check-files:
-  stage: test
-  image: alpine:latest
+cache:
+  key:
+    files:
+      - requirements.txt
+  paths:
+    - ./cache/.
+
+
+lint-analyze:
+  stage: lint
+  image: python:3.11-slim
+  before_script:
+    - pip install flake8
   script:
-    - echo "Запуск проверки файлов в ветке"
-    - ls -la
-    - test -f file2.txt
-    - echo "Проверка успешно завершена"
+    - flake8 .
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - changes: 
+        - "**/*.py"
+
+units-analyze:
+  stage: unit-tests
+  image: python:3.11-slim 
+  before_script:
+    - pip install -r requirements.txt
+  script:
+    - pytest
+
+
+build-image:
+  stage: build
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  before_script:
+    - docker --version 
+  script: 
+    - echo "$DOCKER_HUB_TOKEN" | docker login -u "bubuls" --password-stdin
+    - docker build -t bubuls/app:latest . 
+    - docker push bubuls/app:latest
+  after_script:
+    - docker images | grep bubuls/app:latest
+  needs:
+    - units-analyze
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "main" '
+
+deploy-to-main:
+  stage: deploy 
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  script:
+    - cd ~/Desktop/devops_test/app
+    - echo "$DOCKER_HUB_TOKEN" | docker login -u "bubuls" --password-stdin
+    - docker pull bubuls/app:latest
+    - docker run bubuls/app:latest
+  after_script:
+    - date
+  needs:
+    - build-image
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" '
