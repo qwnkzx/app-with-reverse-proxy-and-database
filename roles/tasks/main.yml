@@ -1,0 +1,45 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles
+
+
+- name: create dir for project 
+  ansible.builtin.file:
+    path: "{{ path }}/configs"
+    state: directory 
+    mode: '0755'
+
+- name: Copy application files
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/app/"
+    dest: "{{ path }}/"
+    mode: preserve
+
+- name: upload nginx frontend file 
+  ansible.builtin.template:
+    src:  nginx-frontend.conf.j2
+    dest: "{{ path }}/configs/nginx-frontend.conf" 
+    mode: '0644'
+
+- name: upload nginx proxy-file 
+  ansible.builtin.template:
+    src: nginx-proxy.conf.j2
+    dest: "{{ path }}/configs/nginx-proxy.conf"
+    mode: '0644'
+
+- name: upload docker compose file 
+  ansible.builtin.template:
+    src: docker-compose.yaml.j2
+    dest: "{{ path }}/docker-compose.yaml"
+    mode: '0644'
+
+- name: Create database data directory
+  ansible.builtin.file:
+    path: "{{ path }}/data/pg_data"
+    state: directory
+    mode: '0755'
+
+- name: Up docker compose file 
+  community.docker.docker_compose_v2:
+    project_src: "{{ path }}"
+    state: present

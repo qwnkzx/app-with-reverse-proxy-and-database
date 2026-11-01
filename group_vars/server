@@ -1,0 +1,2 @@
+ansible_user: #your_user
+ansible_ssh_privat_key_file: ~/.ssh/id_ed25519

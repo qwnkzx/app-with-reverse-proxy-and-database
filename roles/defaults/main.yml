@@ -1,0 +1,9 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for roles
+worker_processes: "1"
+worker_connections: "1024"
+index: "index.html"
+server_name: "localhost"
+
+docker_network: "project_net"

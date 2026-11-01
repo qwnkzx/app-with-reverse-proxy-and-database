@@ -1,0 +1,30 @@
+worker_processes "{{ worker_processes }}";
+
+events {
+    worker_connections "{{ worker_connections }}";
+}
+
+http {
+
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    server {
+        listen 80;
+        server_name "{{ server_name }}";
+
+        root /usr/share/nginx/html;
+        index "{{ index }}";
+
+
+        location / {
+            try_files $uri $uri/ /404.html;
+        }
+        
+        error_page 404 /404.html;
+        location = /404.html {
+            internal;
+        }
+
+    }
+}

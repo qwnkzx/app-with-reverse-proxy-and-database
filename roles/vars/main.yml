@@ -1,0 +1,13 @@
+#SPDX-License-Identifier: MIT-0
+---
+# vars file for roles
+
+#ansible variables 
+path: "/var/www/j2_app"
+
+#DATABASE ENVIRONMENTS
+POSTGRES_DB: "bubu"
+POSTGRES_USER: "bubu"
+POSTGRES_PASSWORD_FILE: "/run/secrets/postgres-passwd"
+PGDATA: "/var/lib/postgresql/data/pgdata"
+

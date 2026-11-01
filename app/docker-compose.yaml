@@ -50,7 +50,7 @@ services:
 
   database:
     image: postgres:14.24-trixie
-    container_name: postgresql
+    container_name: database
     restart: always
     shm_size: "128mb"
     healthcheck:

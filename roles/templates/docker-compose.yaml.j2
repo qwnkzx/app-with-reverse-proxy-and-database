@@ -1,0 +1,84 @@
+services:
+  reverse-proxy:
+    image: nginx:latest
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./configs/nginx-proxy.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - "{{ docker_network }}"
+    depends_on:
+      - backend
+  
+
+
+  backend:
+    build: .
+    container_name: python-backend
+    working_dir: /j2_app
+    volumes:
+      - .:/j2_app
+    environment:
+      - DB_HOST=database
+      - DB_PORT=5432
+      - POSTGRES_USER="{{ POSTGRES_USER }}"
+      - POSTGRES_DB="{{ POSTGRES_DB }}"
+      - POSTGRES_PASSWORD_FILE="{{ POSTGRES_PASSWORD_FILE }}"
+    secrets:
+      - postgres-passwd
+    ports:
+      - "8000"
+    networks:
+      - "{{ docker_network }}"
+    depends_on:
+      - database
+
+
+
+  frontend:
+    image: nginx:latest
+    container_name: nginx-front
+    volumes:
+      -  ./configs/nginx-frontend.conf:/etc/nginx/nginx.conf:ro
+      -  ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./404.html:/usr/share/nginx/html/404.html:ro
+    ports:
+      - "80"
+    networks:
+      - "{{ docker_network }}"
+  
+
+  database:
+    image: postgres:14.24-trixie
+    container_name: database
+    restart: always
+    shm_size: "128mb"
+    volumes:
+      - {{ path}}/data/pg_data:{{ PGDATA }}
+    environment:
+      - POSTGRES_DB={{ POSTGRES_DB }}
+      - POSTGRES_USER={{ POSTGRES_USER }}
+      - POSTGRES_PASSWORD_FILE={{ POSTGRES_PASSWORD_FILE }}
+      - PGDATA={{ PGDATA }}
+    secrets:
+      - postgres-passwd
+    ports:
+      - "5432:8000"
+    networks:
+      - "{{ docker_network }}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+secrets:
+  postgres-passwd:
+    file: ./.secrets/postgres-passwd.txt
+
+
+networks:
+  "{{ docker_network }}":
+    driver: bridge 

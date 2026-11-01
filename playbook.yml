@@ -1,0 +1,7 @@
+- name: Up my j2_project
+  hosts: all
+  become: true 
+
+
+  roles:
+    - roles
