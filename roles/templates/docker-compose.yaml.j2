@@ -32,7 +32,8 @@ services:
     networks:
       - "{{ docker_network }}"
     depends_on:
-      - database
+      database:
+        condition: service_healthy
 
 
 

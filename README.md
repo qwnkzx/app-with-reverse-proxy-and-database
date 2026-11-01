@@ -6,6 +6,8 @@
 *   **Reverse Proxy & Web Server:** Nginx (двухуровневая архитектура: Front-server для статики + Reverse Proxy для маршрутизации API).
 *   **Orchestration:** Docker & Docker Compose (контейнеризация всех компонентов, кастомная bridge-сеть).
 *   **CI/CD:** GitLab CI (автоматический линтинг, модульное тестирование, сборка образов и деплой).
+*   **Infrastucture as Code** Ansible roles(роли для удобства, переиспользования и структурирования кода)
+*   **Configuration** Jinja2 (шаблонизация для динамической конфигурации сред развертывания)
 
 ## 🧠 Инфраструктурные особенности проекта
 
@@ -19,12 +21,12 @@
 
 ## 📈 Планы по развитию проекта (Roadmap)
 
-*   [ ] **IaC (Infrastructure as Code):** Написание Ansible-плейбуков для автоматического развертывания Docker-окружения на удаленных серверах (VPS).
-*   [ ] **Observability (Мониторинг):** Интеграция Prometheus и Node Exporter для сбора метрик хоста и контейнеров (`cAdvisor`).
+*   [x] **IaC (Infrastructure as Code):** Написание Ansible-плейбуков для автоматического развертывания Docker-окружения на удаленных серверах (VPS).
+*   [ ] **Observability:** Интеграция Prometheus и Node Exporter для сбора метрик хоста и контейнеров (`cAdvisor`).
 *   [ ] **Dashboards:** Настройка Grafana для визуализации утилизации ресурсов (CPU, RAM, Disk I/O) и логирования (`Loki`).
 
 ## Запуск проекта:
 
 Для этого понадобиться лишь одна команда
 
-`docker compose up -d`
+`ansible-playbook playbook.yml`
