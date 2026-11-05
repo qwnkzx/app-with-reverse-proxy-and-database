@@ -1,29 +1,46 @@
-# app-with-reverse-proxy-and-database
+# App with Reverse Proxy and Database
 
-## 🛠️ Текущий технологический стек
+Production-like приложение с инфраструктурой на Docker, Ansible и GitLab CI.
 
-*   **Database:** PostgreSQL 14 (Trixie).
-*   **Reverse Proxy & Web Server:** Nginx (двухуровневая архитектура: Front-server для статики + Reverse Proxy для маршрутизации API).
-*   **Orchestration:** Docker & Docker Compose (контейнеризация всех компонентов, кастомная bridge-сеть).
-*   **CI/CD:** GitLab CI (автоматический линтинг, модульное тестирование, сборка образов и деплой).
-*   **Infrastucture as Code** Ansible roles(роли для удобства, переиспользования и структурирования кода)
-*   **Configuration** Jinja2 (шаблонизация для динамической конфигурации сред развертывания)
+## Архитектура
+Клиент
+↓
+Frontend Nginx (статика + SSL)
+↓
+Backend Nginx (reverse proxy)
+↓
+FastAPI (backend)
+↓
+PostgreSQL
 
-## 🧠 Инфраструктурные особенности проекта
+Всё поднимается через Docker Compose и полностью автоматизировано Ansible.
 
-В ходе реализации архитектуры были применены лучшие практики DevOps (Production-ready подход):
-1.  **Multi-stage Builds:** Dockerfile для бэкенда оптимизирован с помощью многоэтапной сборки. Финальный образ собран на базе `python:slim`, содержит только изолированное виртуальное окружение (`venv`) и весит минимум.
-2.  **Запуск от Non-root пользователя:** В целях безопасности процесс Python внутри контейнера изолирован и запускается от имени некорневого пользователя `appuser`.
-3.  **Docker Secrets & Безопасность:** Пароли от СУБД полностью вынесены из переменных окружения и конфигурационных файлов. Используется механизм `Docker Secrets` (`POSTGRES_PASSWORD_FILE`), считывающий секреты из защищенных файлов на хосте в `/run/secrets/`.
-4.  **Data Persistence:** Для данных СУБД настроен именованный волюм (`Named Volume`), что гарантирует сохранность данных при перезапуске или обновлении контейнеров.
-5.  **Контроль готовности (Healthchecks):** Для предотвращения Race Condition при запуске стека (когда бэкенд падал до полной инициализации СУБД) для Postgres настроен `healthcheck` на основе утилиты `pg_isready`. Бэкенд ожидает статуса `service_healthy`.
-6.  **Оптимизированный CI/CD Пайплайн:** Реализован направленный ациклический граф (DAG) с помощью параметров `needs` и `optional: true`. Линтер (`flake8`) запускается только при изменении кода, модульные тесты (`pytest`) покрывают каждую сборку, а деплой автоматизирован по условию слияния в `main`.
+## Что реализовано
+
+- **Multi-stage builds** — финальный образ на `python:slim`, минимальный размер
+- **Non-root пользователь** внутри контейнера
+- **Docker Secrets** — пароли не хранятся в переменных окружения
+- **Healthchecks** — backend ждёт готовности PostgreSQL (`pg_isready`)
+- **Named volumes** — данные БД сохраняются между перезапусками
+- **Ansible roles + Jinja2** — полное развёртывание одной командой
+- **GitLab CI** — линтинг, тесты, сборка образов и деплой (DAG через `needs`)
+
+- Cтруктура репозитория
+  
+├── app/                  # код приложения
+├── roles/                # Ansible-роли
+├── group_vars/           # переменные
+├── playbook.yml          # главный playbook
+├── hosts.ini             # inventory
+├── .gitlab-ci.yml        # CI/CD пайплайн
+└── ansible.cfg
+
 
 ## 📈 Планы по развитию проекта (Roadmap)
 
 *   [x] **IaC (Infrastructure as Code):** Написание Ansible-плейбуков для автоматического развертывания Docker-окружения на удаленных серверах (VPS).
-*   [ ] **Observability:** Интеграция Prometheus и Node Exporter для сбора метрик хоста и контейнеров (`cAdvisor`).
-*   [ ] **Dashboards:** Настройка Grafana для визуализации утилизации ресурсов (CPU, RAM, Disk I/O) и логирования (`Loki`).
+*   [ ] **Observability:** Интеграция Prometheus и Node Exporter для сбора метрик хоста и контейнеров.
+*   [ ] **Dashboards:** Настройка Grafana для визуализации утилизации ресурсов (CPU, RAM, Disk I/O) и логирования.
 
 ## Запуск проекта:
 
