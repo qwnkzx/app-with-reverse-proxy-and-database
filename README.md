@@ -3,15 +3,15 @@
 Production-like приложение с инфраструктурой на Docker, Ansible и GitLab CI.
 
 ## Архитектура
-Клиент
+- Клиент
 ↓
-Frontend Nginx (статика + SSL)
+- Frontend Nginx (статика + SSL)
 ↓
-Backend Nginx (reverse proxy)
+- Backend Nginx (reverse proxy)
 ↓
-FastAPI (backend)
+- FastAPI (backend)
 ↓
-PostgreSQL
+- PostgreSQL
 
 Всё поднимается через Docker Compose и полностью автоматизировано Ansible.
 
